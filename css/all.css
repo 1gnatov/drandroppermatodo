@@ -1,0 +1,25 @@
+.pseudo-top {
+    width: 100%;
+    height: 10px;
+    position: relative;
+}
+
+.pseudo-bot {
+    width: 100%;
+    height: 10px;
+    position: relative;
+}
+.listed {
+  list-style-type: none;
+  padding-left: 0;
+}
+.central-wrapper {
+  width: 30%;
+  margin: auto;
+  margin-top: 50px;
+}
+.inp {
+  display: block;
+  width: 100%;
+  height: 50px;
+}
