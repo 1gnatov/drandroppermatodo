@@ -1,12 +1,12 @@
 .pseudo-top {
     width: 100%;
-    height: 10px;
+    height: 15px;
     position: relative;
 }
 
 .pseudo-bot {
     width: 100%;
-    height: 10px;
+    height: 15px;
     position: relative;
 }
 .listed {
@@ -22,4 +22,7 @@
   display: block;
   width: 100%;
   height: 50px;
+}
+.highlighted {
+  background-color: #8AFF7A;
 }

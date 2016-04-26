@@ -1,5 +1,6 @@
 if (!window.WebSocket) {
     document.body.innerHTML = 'WebSocket в этом браузере не поддерживается.';
+
 }
 
 // создать подключение
@@ -30,9 +31,19 @@ socket.onmessage = function(event) {
 };
 
 function allowDrop(ev) {
-    var id = ev.dataTransfer.getData("text/plain")
-    ev.dataTransfer.dropEffect = "move"
+    $(ev.target).addClass('highlighted');
     ev.preventDefault();
+}
+
+function removeHighlight(ev) {
+    $(ev.target).removeClass('highlighted');
+    ev.preventDefault();
+}
+
+function removeAllhighlighted() {
+    $('.highlighted').each(function(index, el) {
+        $(this).removeClass('highlighted');
+    });
 }
 
 function drag(ev) {
@@ -44,27 +55,36 @@ function dropBefore(ev) {
     ev.preventDefault();
     var id = ev.dataTransfer.getData("text/plain");
     var text = ev.dataTransfer.getData("text/html");
-    // $('#' + id + '.todoelem').remove();
-    // $(ev.target).parent().before($(createListElem(id, text)));
-    var listEle = { "modelChange": "dropBefore", "id": id, "text": text, "position": ev.target.id };
-    socket.send(JSON.stringify(listEle));
+    if (ev.target.id === id) {
+        // Nothing to do here
+    } else {
+        // $('#' + id + '.todoelem').remove();
+        // $(ev.target).parent().before($(createListElem(id, text)));
+        var listEle = { "modelChange": "dropBefore", "id": id, "text": text, "position": ev.target.id };
+        socket.send(JSON.stringify(listEle));
+    }
+
 }
 
 function dropAfter(ev) {
     ev.preventDefault();
     var id = ev.dataTransfer.getData("text/plain");
     var text = ev.dataTransfer.getData("text/html");
-    // $('#' + id + '.todoelem').remove();
-    // $(ev.target).parent().after($(createListElem(id, text)));
-    var listEle = { "modelChange": "dropAfter", "id": id, "text": text, "position": ev.target.id };
-    socket.send(JSON.stringify(listEle));
+    if (ev.target.id === id) {
+        // Nothing to do here
+    } else {
+        // $('#' + id + '.todoelem').remove();
+        // $(ev.target).parent().after($(createListElem(id, text)));
+        var listEle = { "modelChange": "dropAfter", "id": id, "text": text, "position": ev.target.id };
+        socket.send(JSON.stringify(listEle));
+    }
 }
 
 function createListElem(id, text) {
-    $containerElem = $("<li id='" + id + "' class='todoelem' ></li>")
-    $elem = $("<div id='" + id + "' class='bright1 rectangle stack nodrop' draggable='true' ondragstart='drag(event)' >" + text + "</div>")
-    $topDropZone = $("<div id='" + id + "' class='pseudo-top' ondrop='dropBefore(event)' ondragover='allowDrop(event)'></div>");
-    $botDropZone = $("<div id='" + id + "' class='pseudo-bot' ondrop='dropAfter(event)' ondragover='allowDrop(event)'></div>");
+    $containerElem = $("<div id='" + id + "' class='todoelem' ondrop=''></div>")
+    $elem = $("<div id='" + id + "' class='bright1 rectangle stack nodrop' draggable='true' ondragstart='drag(event)' ondragend='removeAllhighlighted()'>" + text + "</div>")
+    $topDropZone = $("<div id='" + id + "' class='pseudo-top' ondrop='dropBefore(event)' ondragover='allowDrop(event)' ondragleave='removeHighlight(event)'></div>");
+    $botDropZone = $("<div id='" + id + "' class='pseudo-bot' ondrop='dropAfter(event)' ondragover='allowDrop(event)' ondragleave='removeHighlight(event)'></div>");
     $containerElem.append($topDropZone, $elem, $botDropZone);
     return $containerElem;
 }
