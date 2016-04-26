@@ -21,11 +21,9 @@ socket.onmessage = function(event) {
     if (msgObj.modelChange === "create") {
         $(".listed").append(createListElem(msgObj.id, msgObj.text));
     } else if (msgObj.modelChange === "dropBefore") {
-        $('#' + msgObj.id + '.todoelem').remove();
-        $('#' + msgObj.position + '.todoelem').before($(createListElem(msgObj.id, msgObj.text)));
+        $('#' + msgObj.id + '.todoelem').insertBefore('#' + msgObj.position + '.todoelem');
     } else if (msgObj.modelChange === "dropAfter") {
-        $('#' + msgObj.id + '.todoelem').remove();
-        $('#' + msgObj.position + '.todoelem').after($(createListElem(msgObj.id, msgObj.text)));
+        $('#' + msgObj.id + '.todoelem').insertAfter('#' + msgObj.position + '.todoelem');
     }
 
 };
@@ -97,6 +95,11 @@ $(document).ready(function() {
     $("form").submit(function(e) {
         e.preventDefault();
         var text = $(".inp").val();
+        text.replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
         if (text !== '') {
             var id = "id" + Math.random().toString(16).slice(2)
 
